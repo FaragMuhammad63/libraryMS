@@ -1,27 +1,28 @@
 package com.farag.ultimate.controllers;
 
-import com.farag.ultimate.models.User;
+
+import com.farag.ultimate.models.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/books")
+public class BookController {
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id){
+    public ResponseEntity<Book> getBook(@PathVariable Long id){
         return null;
     }
     @GetMapping({"/", ""})
-    public ResponseEntity<User> getAllUsers(){
+    public ResponseEntity<Book> getAllBooks(){
         return null;
     }
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id){
+    public ResponseEntity<Book> updateBook(@RequestBody Book Book, @PathVariable Long id){
         return null;
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteBook(@PathVariable Long id){
         return null;
     }
 
