@@ -11,11 +11,10 @@ import com.farag.ultimate.exceptions.NotFoundException;
 import com.farag.ultimate.models.Role;
 import com.farag.ultimate.models.User;
 import com.farag.ultimate.repos.RoleRepository;
-import com.farag.ultimate.repos.UserRepo;
+import com.farag.ultimate.repos.UserRepository;
 import com.farag.ultimate.security.JWTUserDetails;
 import com.farag.ultimate.security.JWTUserDetailsService;
 import com.farag.ultimate.security.JWTUtils;
-import org.hibernate.PropertyValueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +28,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -38,16 +36,16 @@ import java.util.Set;
 public class AuthServiceImp implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JWTUserDetailsService jwtUserDetailsService;
     private final RoleRepository roleRepository;
     private final JWTUtils jwtUtils;
 
     @Autowired
-    public AuthServiceImp(AuthenticationManager authenticationManager, UserRepo userRepo, BCryptPasswordEncoder passwordEncoder, JWTUserDetailsService jwtUserDetailsService, RoleRepository roleRepository, JWTUtils jwtUtils) {
+    public AuthServiceImp(AuthenticationManager authenticationManager, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, JWTUserDetailsService jwtUserDetailsService, RoleRepository roleRepository, JWTUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
-        this.userRepo = userRepo;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.roleRepository = roleRepository;
@@ -63,7 +61,7 @@ public class AuthServiceImp implements AuthService {
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
         } catch (DisabledException ex) {
 
-            User user = userRepo.findFirstByUserName(request.getUserName())
+            User user = userRepository.findFirstByUserName(request.getUserName())
                     .orElseThrow(() -> new UsernameNotFoundException("UserName Not Exist"));
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 throw new BadRequestException("BadCredentialsException");
@@ -74,10 +72,7 @@ public class AuthServiceImp implements AuthService {
 
             throw new BadRequestException("BadCredentialsException");
         }
-        catch (Exception e){
-            System.out.println(e);
-            throw e;
-        }
+
 
         return getJwtResponse(request, auth);
     }
@@ -85,7 +80,7 @@ public class AuthServiceImp implements AuthService {
     @Override
     @Transient
     public JWTResponse registerUser(RegisterUserRequest request) throws AlreadyExistException, BadRequestException, NotAuthorizedUserException, NotFoundException {
-        Optional<User> user = userRepo.findFirstByUserName(request.getUserName());
+        Optional<User> user = userRepository.findFirstByUserName(request.getUserName());
         if (user.isPresent()) throw new AlreadyExistException("User Already Exist");
         User userToRegister = new User();
         userToRegister.setName(request.getName());
@@ -108,7 +103,7 @@ public class AuthServiceImp implements AuthService {
         }
         userToRegister.setRoles(roles);
         try {
-            userRepo.save(userToRegister);
+            userRepository.save(userToRegister);
         } catch (DataIntegrityViolationException ex) {
 
             throw new BadRequestException("these data violate the database");
