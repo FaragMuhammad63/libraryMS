@@ -61,7 +61,7 @@ public class AuthServiceImp implements AuthService {
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
         } catch (DisabledException ex) {
 
-            User user = userRepository.findFirstByUserName(request.getUserName())
+            User user = userRepository.findByUserName(request.getUserName())
                     .orElseThrow(() -> new UsernameNotFoundException("UserName Not Exist"));
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 throw new BadRequestException("BadCredentialsException");
@@ -80,7 +80,7 @@ public class AuthServiceImp implements AuthService {
     @Override
     @Transient
     public JWTResponse registerUser(RegisterUserRequest request) throws AlreadyExistException, BadRequestException, NotAuthorizedUserException, NotFoundException {
-        Optional<User> user = userRepository.findFirstByUserName(request.getUserName());
+        Optional<User> user = userRepository.findByUserName(request.getUserName());
         if (user.isPresent()) throw new AlreadyExistException("User Already Exist");
         User userToRegister = new User();
         userToRegister.setName(request.getName());
@@ -106,7 +106,7 @@ public class AuthServiceImp implements AuthService {
             userRepository.save(userToRegister);
         } catch (DataIntegrityViolationException ex) {
 
-            throw new BadRequestException("these data violate the database");
+            throw new BadRequestException("There's something wrong in your data");
 
         }
 

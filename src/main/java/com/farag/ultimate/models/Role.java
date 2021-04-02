@@ -2,6 +2,7 @@ package com.farag.ultimate.models;
 
 
 import com.farag.ultimate.enums.RolesEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,8 +24,8 @@ public class Role implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
     private RolesEnum role;
-
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
 

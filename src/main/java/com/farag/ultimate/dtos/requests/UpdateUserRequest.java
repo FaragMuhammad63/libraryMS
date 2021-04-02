@@ -1,22 +1,19 @@
 package com.farag.ultimate.dtos.requests;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterUserRequest implements Serializable {
+public class UpdateUserRequest implements Serializable {
     private String name;
-
-    private String phone;
-
     private String userName;
-
-    private String password;
-
+    private String phone;
     private Set<String> roles;
+
 }

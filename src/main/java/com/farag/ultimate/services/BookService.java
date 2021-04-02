@@ -1,4 +1,6 @@
 package com.farag.ultimate.services;
 
-public interface BookService {
+import com.farag.ultimate.models.Book;
+
+public interface BookService extends CrudService<Book>{
 }

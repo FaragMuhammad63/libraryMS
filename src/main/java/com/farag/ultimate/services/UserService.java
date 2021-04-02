@@ -1,4 +1,6 @@
 package com.farag.ultimate.services;
 
-public interface UserService {
+import com.farag.ultimate.models.User;
+
+public interface UserService extends CrudService<User> {
 }

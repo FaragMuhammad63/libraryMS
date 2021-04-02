@@ -1,4 +1,6 @@
 package com.farag.ultimate.services;
 
-public interface PublisherService {
+import com.farag.ultimate.models.Publisher;
+
+public interface PublisherService extends CrudService<Publisher>{
 }

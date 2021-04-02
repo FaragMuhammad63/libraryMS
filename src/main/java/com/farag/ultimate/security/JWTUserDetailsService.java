@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
+
+
 @Service
 public class JWTUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -21,13 +23,14 @@ public class JWTUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findFirstByUserName(s).orElseThrow(
+        User user = userRepository.findByUserName(s).orElseThrow(
                 () -> new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", s)));
+
         return new JWTUserDetails(user.getId(), user.getPassword(), user.getUserName(), user.getRoles());
     }
 
     public boolean isUserVerified(String username) {
-        User user = userRepository.findFirstByUserName(username)
+        User user = userRepository.findByUserName(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username)));
 

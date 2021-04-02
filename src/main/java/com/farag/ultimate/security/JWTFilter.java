@@ -1,7 +1,6 @@
 package com.farag.ultimate.security;
 
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,7 +19,7 @@ import java.io.IOException;
 @Service
 
 public class JWTFilter extends OncePerRequestFilter {
-    @Value("auth.header")
+    @Value("${auth.header}")
 
     private String headerContent;
     private final JWTUtils jwtUtils;

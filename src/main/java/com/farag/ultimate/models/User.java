@@ -1,5 +1,6 @@
 package com.farag.ultimate.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 
@@ -13,6 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @Setter
 @Getter
+@NamedEntityGraph(name = "user.roles", attributeNodes = @NamedAttributeNode("roles"))
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,8 @@ public class User implements Serializable {
     private String userName;
     @Column(name = "password", nullable = false)
     private String password;
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
